@@ -13,7 +13,9 @@
       </div>
       <div class="form-container sign-in">
         <form>
-          <icon name="login-logo" />
+          <RouterLink :to="{ name: 'home' }">
+            <icon name="login-logo" />
+          </RouterLink>
           <br />
           <br />
           <input type="username" placeholder="Username" />

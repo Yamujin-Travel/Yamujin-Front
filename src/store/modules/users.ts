@@ -1,9 +1,6 @@
-import { instance } from './../../api/axios';
-import { instance } from '../../api/axios';
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
-import axios from 'axios';
 import { instance, authInstance } from '@/api/axios';
 import { API } from '@/config';
 
@@ -32,7 +29,7 @@ export const useUserStore = defineStore(
       }
     };
 
-    const signUp = async (payload) => {
+    const signUp = async (payload: any) => {
       const { username, nickname, email, password1, password2 } = payload;
 
       try {
@@ -54,7 +51,7 @@ export const useUserStore = defineStore(
       }
     };
 
-    const logIn = async (payload) => {
+    const logIn = async (payload: any) => {
       const { username, password } = payload;
 
       try {
