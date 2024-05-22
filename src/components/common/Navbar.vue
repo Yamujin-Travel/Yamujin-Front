@@ -19,7 +19,7 @@ const routeToLogin = () => {
 
 <template>
   <CategoryModal v-if="isModalOpen" v-model:isModalOpen="isModalOpen" />
-  <div v-if="route.path !== '/login'" class="w-full h-[7rem] flex items-center justify-between px-[34px]">
+  <div v-if="route.path !== '/login'" class="w-full h-[7rem] flex items-center justify-between px-[34px] min-w-max">
     <div class="flex items-center gap-8">
       <RouterLink :to="{ name: 'home' }">
         <icon name="nav-logo" />
