@@ -68,6 +68,8 @@ const logIn = async () => {
     password: password.value,
   };
 
+  await userStore.logIn(payload);
+
   const result = await userStore.getUserInfo(username.value);
   result ? (isRight.value = true) : (isRight.value = false);
 };

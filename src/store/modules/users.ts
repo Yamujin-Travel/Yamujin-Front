@@ -72,7 +72,6 @@ export const useUserStore = defineStore(
         });
         if (response) {
           token.value = response.data.key;
-          // console.log(token);
           const isSuccess = await getUserInfo(username);
           if (isSuccess) {
             router.push({ name: 'home' });
