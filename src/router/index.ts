@@ -77,7 +77,7 @@ const routes = [
             component: PostCreateView,
             // beforeEnter: (to, from) => {
             //   const userStore = useUserStore();
-            //   if (!userStore.isLogin) {
+            //   if (!userStore.isAuthenticated) {
             //     alert('로그인 후 이용 가능합니다.');
             //     return { name: 'SignIn' };
             //   }
@@ -89,7 +89,7 @@ const routes = [
             component: PostUpdateView,
             // beforeEnter: (to, from) => {
             //   const userStore = useUserStore();
-            //   if (!userStore.isLogin) {
+            //   if (!userStore.isAuthenticated) {
             //     alert('로그인 후 이용 가능합니다.');
             //     return { name: 'SignIn' };
             //   }
