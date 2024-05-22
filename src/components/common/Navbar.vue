@@ -55,6 +55,14 @@ const routeToLogin = () => {
     >
       <span class="text-center">시작하기</span>
     </button>
+    <div v-else class="flex items-center space-x-4 text-sm font-normal">
+      <RouterLink :to="{ name: 'profile' }">
+        <icon name="profile1" />
+      </RouterLink>
+      <span>{{ userStore.userInfo.nickname }} 님</span>
+      <p>|</p>
+      <button class="bg-transparent text-[#FD5C63]" @click.prevent="userStore.logOut">로그아웃</button>
+    </div>
   </div>
 </template>
 

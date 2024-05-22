@@ -11,6 +11,7 @@ import PostDetailView from '@/views/posts/PostDetailView.vue';
 import PostCreateView from '@/views/posts/PostCreateView.vue';
 import PostUpdateView from '@/views/posts/PostUpdateView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
+import { useUserStore } from '@/store/modules/users';
 
 const routes = [
   {
@@ -75,25 +76,25 @@ const routes = [
             path: 'write',
             name: 'PostCreate',
             component: PostCreateView,
-            // beforeEnter: (to, from) => {
-            //   const userStore = useUserStore();
-            //   if (!userStore.isAuthenticated) {
-            //     alert('로그인 후 이용 가능합니다.');
-            //     return { name: 'SignIn' };
-            //   }
-            // },
+            beforeEnter: () => {
+              const userStore = useUserStore();
+              if (!userStore.isAuthenticated) {
+                alert('로그인 후 이용 가능합니다.');
+                return { name: 'login' };
+              }
+            },
           },
           {
             path: ':id/update',
             name: 'PostUpdate',
             component: PostUpdateView,
-            // beforeEnter: (to, from) => {
-            //   const userStore = useUserStore();
-            //   if (!userStore.isAuthenticated) {
-            //     alert('로그인 후 이용 가능합니다.');
-            //     return { name: 'SignIn' };
-            //   }
-            // },
+            beforeEnter: () => {
+              const userStore = useUserStore();
+              if (!userStore.isAuthenticated) {
+                alert('로그인 후 이용 가능합니다.');
+                return { name: 'SignIn' };
+              }
+            },
           },
         ],
       },

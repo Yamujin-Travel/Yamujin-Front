@@ -1,13 +1,12 @@
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
-import { instance, authInstance } from '@/api/axios';
+import { instance, getAuthInstance } from '@/api/axios';
 import { API } from '@/config';
 
 export const useUserStore = defineStore(
   'users',
   () => {
-    const API_URL = API.USERS;
     const router = useRouter();
     const token = ref(localStorage.getItem('token') || null);
     const isAuthenticated = computed(() => {
@@ -15,14 +14,26 @@ export const useUserStore = defineStore(
     });
     const userInfo = ref();
 
+    onMounted(async () => {
+      const item = localStorage.getItem('users');
+
+      if (item) {
+        const parsedItem = JSON.parse(item);
+        token.value = parsedItem.token;
+        userInfo.value = { ...parsedItem.userInfo };
+      }
+    });
+
     const getUserInfo = async (username: string) => {
       try {
-        const response = await authInstance.get(`${API_URL}/${username}/info/`);
-        if (response.status === 200) {
+        const authInstance = getAuthInstance();
+        const response = await authInstance.get(`${API.USERS}/${username}/info/`);
+        if (response) {
           userInfo.value = response.data;
+          userInfo.value.profile_img = Math.floor(Math.random() * 9) + 1;
           return true;
         } else {
-          throw new Error(`Failed to get user info: ${response.status}`);
+          throw new Error(`Failed to get user info: ${response}`);
         }
       } catch (err) {
         console.error('사용자 정보를 가져오는데 실패했습니다:', err);
@@ -33,7 +44,7 @@ export const useUserStore = defineStore(
       const { username, nickname, email, password1, password2 } = payload;
 
       try {
-        const response = await instance.post(`${API_URL}/registration/`, {
+        const response = await instance.post(`${API.ACCOUNTS}/registration/`, {
           username,
           nickname,
           email,
@@ -41,7 +52,7 @@ export const useUserStore = defineStore(
           password2,
         });
 
-        if (response.status === 200) {
+        if (response.status === 204) {
           await logIn({ username, password: password1 });
         } else {
           throw new Error(`Failed to sign up: ${response.status}`);
@@ -55,13 +66,13 @@ export const useUserStore = defineStore(
       const { username, password } = payload;
 
       try {
-        const response = await instance.post(`${API_URL}/login/`, {
+        const response = await instance.post(`${API.ACCOUNTS}/login/`, {
           username,
           password,
         });
-
-        if (response.status === 200) {
+        if (response) {
           token.value = response.data.key;
+          // console.log(token);
           const isSuccess = await getUserInfo(username);
           if (isSuccess) {
             router.push({ name: 'home' });
@@ -69,7 +80,7 @@ export const useUserStore = defineStore(
             throw new Error('Failed to get user info');
           }
         } else {
-          throw new Error(`Login failed: ${response.status}`);
+          throw new Error(`Login failed: ${response}`);
         }
       } catch (err) {
         console.error('로그인에 실패했습니다:', err);
@@ -78,12 +89,11 @@ export const useUserStore = defineStore(
 
     const logOut = async () => {
       try {
-        const response = await instance.post(`${API_URL}/logout/`);
+        const response = await instance.post(`${API.ACCOUNTS}/logout/`);
 
         if (response.status === 200) {
           token.value = null;
           userInfo.value = [];
-          router.push({ name: 'home' });
         } else {
           throw new Error(`Logout failed: ${response.status}`);
         }

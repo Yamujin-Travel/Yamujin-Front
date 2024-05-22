@@ -2,26 +2,33 @@
   <div class="wrapper">
     <div class="container" :class="{ active: isActive }">
       <div class="form-container sign-up">
-        <form>
+        <form @submit.prevent="signUp" @keypress.enter="signUp">
           <h1 class="text-xl font-semibold">회원가입</h1>
-          <input type="username" placeholder="Username" />
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <input type="passwordconfirm" placeholder="Password Confirm" />
-          <button>회원가입</button>
+          <input placeholder="아이디" v-model="username" />
+          <input placeholder="닉네임" v-model="nickname" />
+          <input placeholder="이메일" v-model="email" />
+          <input type="password" placeholder="비밀번호" v-model="password" />
+          <input type="password" placeholder="비밀번호 확인" v-model="passwordConfirm" />
+          <button @click.prevent="signUp">회원가입</button>
         </form>
       </div>
       <div class="form-container sign-in">
-        <form>
+        <form @submit.prevent="logIn" @keypress.enter="logIn">
           <RouterLink :to="{ name: 'home' }">
             <icon name="login-logo" />
           </RouterLink>
           <br />
           <br />
-          <input type="username" placeholder="Username" />
-          <input type="password" placeholder="Password" />
+          <input class="input-field" type="text" placeholder="아이디" v-model="username" />
+          <input class="input-field" type="password" placeholder="비밀번호" v-model="password" />
 
-          <button>로그인</button>
+          <div v-show="!isRight" class="text-red-400">
+            <p>
+              아이디(로그인 전용 아이디)<br />
+              또는 비밀번호를 잘못 입력했습니다.
+            </p>
+          </div>
+          <button class="button" @click.prevent="logIn">로그인</button>
         </form>
       </div>
       <div class="toggle-container">
@@ -44,11 +51,43 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useUserStore } from '@/store/modules/users';
+
+const userStore = useUserStore();
+
+const username = ref('');
+const nickname = ref('');
+const email = ref('');
+const password = ref('');
+const passwordConfirm = ref('');
+const isRight = ref(true);
+
+const logIn = async () => {
+  const payload = {
+    username: username.value,
+    password: password.value,
+  };
+
+  const result = await userStore.getUserInfo(username.value);
+  result ? (isRight.value = true) : (isRight.value = false);
+};
+
+const signUp = () => {
+  const payload = {
+    username: username.value,
+    nickname: nickname.value,
+    email: email.value,
+    password1: password.value,
+    password2: passwordConfirm.value,
+  };
+  userStore.signUp(payload);
+};
 
 const isActive = ref(false);
 
 const toggleActive = () => {
   isActive.value = !isActive.value;
+  username.value = nickname.value = email.value = password.value = passwordConfirm.value = '';
 };
 </script>
 
