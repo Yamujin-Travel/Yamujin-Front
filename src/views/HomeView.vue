@@ -9,7 +9,9 @@
         야무야무야무얌무야무야무야무<br />야무야무야무 무무무무뭄 야무!! 야무야무야무야무뀨뀨<br />무야무야무야무야진
         여행!
       </p>
-      <button class="py-3 font-medium bg-airbnb text-background-100 w-[8rem] rounded-3xl">추천 받기</button>
+      <RouterLink :to="{ name: 'recommend' }" class="w-[8rem]">
+        <button class="py-3 font-medium bg-airbnb text-background-100 w-[8rem] rounded-3xl">추천 받기</button>
+      </RouterLink>
     </div>
   </div>
 </template>
