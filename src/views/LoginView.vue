@@ -99,11 +99,11 @@ const toggleActive = () => {
 }
 
 .container button {
-  background-color: #fd5c63;
-  color: #fff;
+  background-color: #fff;
+  color: #fd5c63;
   font-size: 14px;
   padding: 10px 45px;
-  border: 1px solid transparent;
+  border: 1px solid #fd5c63;
   border-radius: 8px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -113,9 +113,9 @@ const toggleActive = () => {
 }
 
 .container button.hide {
-  background-color: transparent;
-  border: 1px solid #fd5c63;
-  color: #fd5c63;
+  background-color: #fd5c63;
+  border: 1px solid transparent;
+  color: #fff;
   font-size: 12px;
   padding: 10px 45px;
   border-radius: 8px;
