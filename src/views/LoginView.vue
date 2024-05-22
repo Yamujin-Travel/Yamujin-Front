@@ -13,7 +13,7 @@
       </div>
       <div class="form-container sign-in">
         <form>
-          <icon name="logo" />
+          <icon name="login-logo" />
           <br />
           <br />
           <input type="username" placeholder="Username" />
