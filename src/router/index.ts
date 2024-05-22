@@ -63,7 +63,7 @@ const routes = [
             path: ':id',
             name: 'PostDetail',
             component: PostDetailView,
-            beforeEnter: (to) => {
+            beforeEnter: (to: any) => {
               const id = to.params.id;
               if (isNaN(Number(id))) {
                 // id가 숫자가 아니면 404 페이지로 리다이렉트

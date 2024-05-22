@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
-    <navbar></navbar>
+  <div class="w-full h-screen" id="app">
+    <navbar />
     <RouterView />
   </div>
 </template>
 
-<script lang="ts"></script>
+<script setup lang="ts"></script>
 
 <style scoped>
 #app {
