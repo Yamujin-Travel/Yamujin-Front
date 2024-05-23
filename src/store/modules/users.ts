@@ -82,7 +82,7 @@ export const useUserStore = defineStore(
           token.value = response.data.key;
           const isSuccess = await getUserInfo(username);
           if (isSuccess) {
-            router.push({ name: 'home' });
+            router.push({ name: 'profile' });
           } else {
             throw new Error('Failed to get user info');
           }

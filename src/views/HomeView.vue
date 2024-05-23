@@ -6,12 +6,12 @@
         Yamujin Travel !
       </h1>
       <p class="mb-8 text-xl text-left text-semiBlack">
-        야무야무야무얌무야무야무야무<br />야무야무야무 무무무무뭄 야무!! 야무야무야무야무뀨뀨<br />무야무야무야무야진
-        여행!
+        여행을 계획하고 있으신가요?<br /><span class="text-airbnb">야무진 트레블</span>과 함께라면 여행 계획에 맞는
+        상품을<br />추천받고 가입할 수 있습니다 !<br /><br />지금 바로 나에게 맞는 상품을 추천 받아보세요 !
       </p>
       <RouterLink
         class="py-3 font-medium transition border-2 rounded-full w-36 bg-background-100 text-airbnb hover:bg-airbnb hover:text-background-100"
-        :to="{ name: 'recommend' }"
+        :to="{ name: 'login' }"
       >
         추천 받기
       </RouterLink>
