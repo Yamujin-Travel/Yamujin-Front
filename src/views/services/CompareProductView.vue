@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-[8rem] w-full">
     <div class="flex w-full">
-      <div class="w-full h-[35vw] bg-[#A7E1EA] flex items-center justify-center">
+      <div class="w-full h-[35vw] bg-[#2e93df] flex items-center justify-center">
         <icon name="compare-mockup" />
       </div>
       <div class="w-[58vw] h-[30vw] bg-background-200 flex flex-col items-center justify-center">

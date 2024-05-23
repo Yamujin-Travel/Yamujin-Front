@@ -8,6 +8,7 @@ import icon from '@/components/common/icon.vue';
 import homeIcon from '@/components/common/homeIcon.vue';
 import profileIcon from '@/components/common/profileIcon.vue';
 import searchBankIcon from '@/components/common/searchBankIcon.vue';
+import exchangeIcon from '@/components/common/exchangeIcon.vue';
 import Navbar from '@/components/common/Navbar.vue';
 import './index.css';
 
@@ -19,5 +20,6 @@ app.component('icon', icon);
 app.component('homeIcon', homeIcon);
 app.component('profileIcon', profileIcon);
 app.component('searchBankIcon', searchBankIcon);
+app.component('exchangeIcon', exchangeIcon);
 app.component('navbar', Navbar);
 app.use(store).use(router).use(vuetify).mount('#app');
