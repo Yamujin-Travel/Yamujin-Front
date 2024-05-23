@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       boxShadow: {
         category: '10px 10px 20px 5px rgba(132, 132, 132, 0.25)',
+        profilecard: '0 0 50px rgba(181, 181, 181, 0.2)',
       },
 
       colors: {

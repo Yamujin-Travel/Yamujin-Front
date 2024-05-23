@@ -19,7 +19,7 @@ const routeToLogin = () => {
 
 <template>
   <CategoryModal v-if="isModalOpen" v-model:isModalOpen="isModalOpen" />
-  <div v-if="route.path !== '/login'" class="w-full h-[7rem] flex items-center justify-between px-[34px]">
+  <div v-if="route.path !== '/login'" class="w-full h-[7rem] flex items-center justify-between px-[34px] min-w-max">
     <div class="flex items-center gap-8">
       <RouterLink :to="{ name: 'home' }">
         <icon name="nav-logo" />
@@ -55,6 +55,14 @@ const routeToLogin = () => {
     >
       <span class="text-center">시작하기</span>
     </button>
+    <div v-else class="flex items-center space-x-4 text-sm font-normal">
+      <RouterLink :to="{ name: 'profile' }">
+        <icon name="profile1" />
+      </RouterLink>
+      <span>{{ userStore.userInfo.nickname }} 님</span>
+      <p>|</p>
+      <button class="bg-transparent text-[#FD5C63]" @click.prevent="userStore.logOut">로그아웃</button>
+    </div>
   </div>
 </template>
 
