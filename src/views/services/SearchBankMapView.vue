@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div class="flex">
-      <div class="w-full h-[35vw] bg-[#A7E1EA] flex items-center justify-center">
+      <div class="w-full h-[35vw] bg-[#F76D74] flex items-center justify-center">
         <searchBankIcon name="webMockup" />
       </div>
       <div class="w-[58vw] h-[30vw] bg-background-200 flex flex-col items-center justify-center">
