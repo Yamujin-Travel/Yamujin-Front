@@ -101,6 +101,7 @@ export const useUserStore = defineStore(
         if (response.status === 200) {
           token.value = null;
           userInfo.value = [];
+          router.push({ name: 'home' });
         } else {
           throw new Error(`Logout failed: ${response.status}`);
         }

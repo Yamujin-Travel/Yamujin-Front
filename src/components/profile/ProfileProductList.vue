@@ -36,6 +36,20 @@
             가입한 상품이 없습니다.<br />
             마음에 드는 <span class="text-airbnb">야무진</span> 상품을 찾아보세요! 🛫
           </p>
+          <div class="flex space-x-4">
+            <RouterLink
+              class="py-3 font-medium transition border-2 rounded-full w-36 bg-background-100 text-airbnb hover:bg-airbnb hover:text-background-100"
+              :to="{ name: 'recommend' }"
+            >
+              맞춤 상품 추천받기
+            </RouterLink>
+            <RouterLink
+              class="py-3 font-medium transition border-2 rounded-full w-36 bg-background-100 text-[#1089FF] hover:bg-[#1089FF] hover:text-white"
+              :to="{ name: 'compare' }"
+            >
+              금융 상품 살펴보기
+            </RouterLink>
+          </div>
         </div>
         <v-dialog v-model="dialog" width="800">
           <v-card v-if="selectedProduct" class="px-3 py-5">

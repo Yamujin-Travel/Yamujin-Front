@@ -37,7 +37,6 @@
                 </td>
                 <td v-else>{{ value }}</td>
               </tr>
-              class: '',
             </tbody>
           </v-table>
           <v-divider class="my-3"></v-divider>
