@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import store from '@/store';
+import vuetify from './plugins/vuetify';
 import router from './router';
 import App from '@/App.vue';
 import icon from '@/components/common/icon.vue';
@@ -19,4 +20,4 @@ app.component('homeIcon', homeIcon);
 app.component('profileIcon', profileIcon);
 app.component('searchBankIcon', searchBankIcon);
 app.component('navbar', Navbar);
-app.use(store).use(router).mount('#app');
+app.use(store).use(router).use(vuetify).mount('#app');
