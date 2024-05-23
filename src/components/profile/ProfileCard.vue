@@ -1,10 +1,13 @@
 <template>
   <div class="w-full h-[15rem] flex items-center justify-between shadow-profilecard min-w-max">
     <div class="px-[7.3125rem] flex items-center space-x-8">
-      <profileIcon name="profile1" />
+      <profileIcon :name="profile_img" />
       <div class="flex flex-col items-start gap-5">
         <span class="text-3xl font-normal">{{ userStore.userInfo.nickname }}</span>
-        <button class="h-8 border border-airbnb text-sm font-medium text-airbnb rounded-[30px] px-[30px]">
+        <button
+          @click="randomizeProfileImg"
+          class="h-8 border cursor-pointer bg-airbnb text-sm font-medium text-white rounded-[30px] px-[30px] flex justify-center items-center"
+        >
           프로필 랜덤 돌리기 🎲
         </button>
       </div>
@@ -25,7 +28,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useUserStore } from '@/store/modules/users';
 
 const userStore = useUserStore();
+const profile_img = ref(userStore.userInfo.profile_img);
+const randomizeProfileImg = () => {
+  const randomNum = Math.floor(Math.random() * 6) + 1;
+  userStore.userInfo.profile_img = `profile${randomNum}`;
+  window.location.reload();
+};
 </script>

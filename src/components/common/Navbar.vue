@@ -57,7 +57,7 @@ const routeToLogin = () => {
     </button>
     <div v-else class="flex items-center space-x-4 text-sm font-normal">
       <RouterLink :to="{ name: 'profile' }">
-        <icon name="profile1" />
+        <icon :name="userStore.userInfo.profile_img" />
       </RouterLink>
       <span>{{ userStore.userInfo.nickname }} 님</span>
       <p>|</p>

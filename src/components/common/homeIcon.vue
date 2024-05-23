@@ -8,7 +8,7 @@ const props = defineProps({
   },
 });
 
-const homeIcon = defineAsyncComponent(async () => await import(`../../assets/svg/home/${props.name}.svg`));
+const homeIcon = defineAsyncComponent(() => import(`../../assets/svg/home/${props.name}.svg`));
 </script>
 
 <template>

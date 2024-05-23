@@ -1,4 +1,4 @@
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
 import { instance, getAuthInstance } from '@/api/axios';
@@ -13,6 +13,13 @@ export const useUserStore = defineStore(
       return token.value === null ? false : true;
     });
     const userInfo = ref();
+    const userContractDeposits = ref();
+    const userContractSavings = ref();
+
+    watch(userInfo, () => {
+      userContractDeposits.value = userInfo.value?.contract_deposit;
+      userContractSavings.value = userInfo.value?.contract_saving;
+    });
 
     onMounted(async () => {
       const item = localStorage.getItem('users');
@@ -30,7 +37,8 @@ export const useUserStore = defineStore(
         const response = await authInstance.get(`${API.USERS}/${username}/info/`);
         if (response) {
           userInfo.value = response.data;
-          userInfo.value.profile_img = Math.floor(Math.random() * 9) + 1;
+          const randomNum = Math.floor(Math.random() * 6) + 1;
+          userInfo.value.profile_img = `profile${randomNum}`;
           return true;
         } else {
           throw new Error(`Failed to get user info: ${response}`);
@@ -109,6 +117,8 @@ export const useUserStore = defineStore(
       signUp,
       logIn,
       logOut,
+      userContractDeposits,
+      userContractSavings,
     };
   },
   { persist: true },

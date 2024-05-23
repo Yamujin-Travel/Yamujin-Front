@@ -1,8 +1,10 @@
 <template>
-  <div class="w-full h-screen" id="app">
-    <navbar />
-    <RouterView />
-  </div>
+  <Suspense>
+    <div class="w-full h-screen" id="app">
+      <navbar />
+      <RouterView />
+    </div>
+  </Suspense>
 </template>
 
 <script setup lang="ts"></script>
