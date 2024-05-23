@@ -32,9 +32,12 @@
             <tbody>
               <tr v-for="(value, key) in selectedDeposit" :key="key">
                 <td width="28%" class="font-weight-bold">{{ key }}</td>
-                <td v-if="key === '최고 한도'">{{ value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</td>
+                <td v-if="String(key) === '최고 한도'">
+                  {{ typeof value === 'number' ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : value }}
+                </td>
                 <td v-else>{{ value }}</td>
               </tr>
+              class: '',
             </tbody>
           </v-table>
           <v-divider class="my-3"></v-divider>
@@ -84,14 +87,14 @@ import { instance, getAuthInstance } from '@/api/axios';
 
 const authInstance = getAuthInstance();
 
-const headers = [
-  { title: '공시 제출일', align: 'center', sortable: false, width: '10%', key: 'dcls_month' },
-  { title: '금융회사명', align: 'center', sortable: false, key: 'kor_co_nm' },
-  { title: '상품명', align: 'center', sortable: false, width: '32%', key: 'name' },
-  { title: '6개월', align: 'center', width: '12%', key: '6month' },
-  { title: '12개월', align: 'center', width: '12%', key: '12month' },
-  { title: '24개월', align: 'center', width: '12%', key: '24month' },
-];
+const headers = ref([
+  { title: '공시 제출일', value: 'dcls_month', align: 'center', sortable: false, width: '10%', key: 'dcls_month' },
+  { title: '금융회사명', value: 'kor_co_nm', align: 'center', sortable: false, key: 'kor_co_nm' },
+  { title: '상품명', value: 'name', align: 'center', sortable: false, width: '32%', key: 'name' },
+  { title: '6개월', value: '6month', align: 'center', width: '12%', key: '6month' },
+  { title: '12개월', value: '12month', align: 'center', width: '12%', key: '12month' },
+  { title: '24개월', value: '24month', align: 'center', width: '12%', key: '24month' },
+] as const);
 
 const deposits: Ref<{ [x: string]: any }[]> = ref([]);
 
@@ -107,7 +110,6 @@ const selectedDepositCode = computed(() => {
 });
 const dialog = ref(false);
 
-const averageIntrRate = [3.45, 4.08, 3.4, 3.35];
 const intrRate = ref([null, null, null, null]);
 const intrRate2 = ref([null, null, null, null]);
 
@@ -267,7 +269,7 @@ const getDeposit = function () {
 const addDepositUser = function () {
   authInstance
     .post(`/financial/deposit_list/${selectedDepositCode.value}/contract/`)
-    .then((res) => {
+    .then(() => {
       userStore.getUserInfo(userStore.userInfo.username);
       const answer = window.confirm('저장이 완료되었습니다.\n가입 상품 관리 페이지로 가시겠습니까?');
       if (answer) {
@@ -282,7 +284,7 @@ const addDepositUser = function () {
 const deleteDepositUser = function () {
   authInstance
     .delete(`/financial/deposit_list/${selectedDepositCode.value}/contract/`)
-    .then((res) => {
+    .then(() => {
       userStore.getUserInfo(userStore.userInfo.username);
     })
     .catch((err) => {

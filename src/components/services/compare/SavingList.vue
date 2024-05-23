@@ -37,7 +37,9 @@
             <tbody>
               <tr v-for="(value, key) in selectedSaving" :key="key">
                 <td width="28%" class="font-weight-bold">{{ key }}</td>
-                <td v-if="key === '최고 한도'">{{ value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</td>
+                <td v-if="String(key) === '최고 한도'">
+                  {{ value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}
+                </td>
                 <td v-else>{{ value }}</td>
               </tr>
             </tbody>
@@ -87,14 +89,14 @@ import { useUserStore } from '@/store/modules/users';
 import { instance, getAuthInstance } from '@/api/axios';
 const authInstance = getAuthInstance();
 
-const headers = [
-  { title: '공시 제출일', align: 'center', sortable: false, width: '10%', key: 'dcls_month' },
-  { title: '금융회사명', align: 'center', sortable: false, key: 'kor_co_nm' },
-  { title: '상품명', align: 'center', sortable: false, width: '32%', key: 'name' },
-  { title: '6개월', align: 'center', width: '12%', key: '6month' },
-  { title: '12개월', align: 'center', width: '12%', key: '12month' },
-  { title: '24개월', align: 'center', width: '12%', key: '24month' },
-];
+const headers = ref([
+  { title: '공시 제출일', value: 'dcls_month', align: 'center', sortable: false, width: '10%', key: 'dcls_month' },
+  { title: '금융회사명', value: 'kor_co_nm', align: 'center', sortable: false, key: 'kor_co_nm' },
+  { title: '상품명', value: 'name', align: 'center', sortable: false, width: '32%', key: 'name' },
+  { title: '6개월', value: '6month', align: 'center', width: '12%', key: '6month' },
+  { title: '12개월', value: '12month', align: 'center', width: '12%', key: '12month' },
+  { title: '24개월', value: '24month', align: 'center', width: '12%', key: '24month' },
+] as const);
 
 const results = ref();
 const savings: Ref<{ [x: string]: any }[]> = ref([]);
@@ -110,7 +112,6 @@ const selectedSavingCode = computed(() => {
 });
 const dialog = ref(false);
 
-const averageIntrRate = [2.78, 3.62, 3.57, 3.52];
 const intrRateF = ref([null, null, null, null]);
 const intrRate2F = ref([null, null, null, null]);
 const intrRateS = ref([null, null, null, null]);
@@ -302,7 +303,7 @@ const getSaving = function () {
 const addSavingUser = function () {
   authInstance
     .post(`/financial/saving_list/${selectedSavingCode.value}/contract/`)
-    .then((res) => {
+    .then(() => {
       userStore.getUserInfo(userStore.userInfo.username);
       const answer = window.confirm('저장이 완료되었습니다.\n가입 상품 관리 페이지로 가시겠습니까?');
       if (answer) {
@@ -317,7 +318,7 @@ const addSavingUser = function () {
 const deleteSavingUser = function () {
   authInstance
     .delete(`/financial/saving_list/${selectedSavingCode.value}/contract/`)
-    .then((res) => {
+    .then(() => {
       userStore.getUserInfo(userStore.userInfo.username);
     })
     .catch((err) => {
