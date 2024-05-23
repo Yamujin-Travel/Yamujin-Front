@@ -1,47 +1,87 @@
 <template>
-  <div class="flex flex-col gap-[8rem] w-full">
-    <div class="flex w-full">
-      <div class="w-full h-[35vw] bg-[#A7E1EA] flex items-center justify-center">
-        <icon name="compare-mockup" />
-      </div>
-      <div class="w-[58vw] h-[30vw] bg-background-200 flex flex-col items-center justify-center">
-        <icon name="compare-bank-logo" />
-        <h3 class="my-5 text-4xl font-bold text-semiBlack">예적금 상품 비교</h3>
-        <p class="text-2xl text-semiBlack">은행별 예적금 금융 상품의 금리를 비교하세요</p>
-        <p class="text-2xl text-semiBlack">마음에 드는 상품은 바로 가입할 수 있습니다 !</p>
+  <div class="flex flex-col items-center w-full gap-[2rem] pb-[4rem]">
+    <h1 class="text-[2.25rem] font-medium w-3/4"><span class="text-airbnb">정기예금</span> 비교하기</h1>
+    <div class="flex justify-end w-3/4">
+      <div class="w-1/4">
+        <v-select
+          variant="outlined"
+          color="#FD5C63"
+          label="은행"
+          :items="banks"
+          v-model="selectedBank"
+          @update:modelValue="clickBank"
+          class="ml-auto"
+        ></v-select>
       </div>
     </div>
-    <div class="flex flex-col w-full gap-[2rem]">
-      <div class="flex w-full h-[5rem] pl-8 border-b border-gray">
-        <div
-          :class="isDeposit ? 'border-b-2 border-airbnb font-bold text-lg' : 'font-regular text-lg'"
-          class="w-[16.625rem] h-full flex items-center justify-center cursor-pointer"
-          @click="isDeposit = true"
-        >
-          <span>정기예금</span>
-        </div>
-        <div
-          :class="!isDeposit ? 'border-b-2 border-airbnb font-bold text-lg' : 'font-regular text-lg'"
-          class="w-[16.625rem] h-full flex items-center justify-center cursor-pointer"
-          @click="isDeposit = false"
-        >
-          <span>정기적금</span>
-        </div>
-      </div>
-      <DepositList v-if="isDeposit" />
-      <SavingList v-else />
+
+    <v-dialog v-model="dialog" class="w-3/4">
+      <v-card v-if="selectedDeposit" class="px-3 py-5">
+        <v-card-title class="d-flex align-center justify-space-between">
+          <h3>{{ selectedDeposit['금융 상품명'] }}</h3>
+          <div v-if="userStore.isAuthenticated">
+            <v-btn v-if="isContractDeposit" color="red" variant="flat" @click.prevent="deleteDepositUser"
+              >가입 취소하기</v-btn
+            >
+            <v-btn v-else color="#FD5C63" variant="flat" @click.prevent="addDepositUser">가입하기</v-btn>
+          </div>
+        </v-card-title>
+
+        <v-card-text>
+          <v-table>
+            <tbody>
+              <tr v-for="(value, key) in selectedDeposit" :key="key">
+                <td width="28%" class="font-weight-bold">{{ key }}</td>
+                <td v-if="key === '최고 한도'">{{ value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') }}</td>
+                <td v-else>{{ value }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+          <v-divider class="my-3"></v-divider>
+          <div class="mx-auto"></div>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#FD5C63" variant="text" @click="close"> 닫기 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-data-table-virtual
+      v-if="depositLength !== 0"
+      fixed-header
+      :headers="headers"
+      :items-length="depositLength"
+      :items="deposits"
+      item-value="deposit_code"
+      height="600"
+      class="table w-3/4 elevation-6"
+    >
+      <template v-slot:item="{ item }">
+        <tr @click="clickRow(item)" class="cursor-pointer hover:bg-slate-200">
+          <td>{{ item['dcls_month'] }}</td>
+          <td>{{ item['kor_co_nm'] }}</td>
+          <td align="center">{{ item['name'] }}</td>
+          <td align="center">{{ item['6month'] }}</td>
+          <td align="center">{{ item['12month'] }}</td>
+          <td align="center">{{ item['24month'] }}</td>
+        </tr>
+      </template>
+    </v-data-table-virtual>
+
+    <div v-else class="h-[15rem] w-full flex justify-center items-center">
+      <v-progress-circular color="#FD5C63" indeterminate size="80"></v-progress-circular>
     </div>
   </div>
 </template>
 
-<script setup>
-import DepositList from '@/components/services/compare/DepositList.vue';
-import SavingList from '@/components/services/compare/SavingList.vue';
-import { ref, onMounted, computed } from 'vue';
+<script setup lang="ts">
+import { ref, Ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/users';
 import { instance, getAuthInstance } from '@/api/axios';
-const isDeposit = ref(true);
+
 const authInstance = getAuthInstance();
 
 const headers = [
@@ -51,10 +91,10 @@ const headers = [
   { title: '6개월', align: 'center', width: '12%', key: '6month' },
   { title: '12개월', align: 'center', width: '12%', key: '12month' },
   { title: '24개월', align: 'center', width: '12%', key: '24month' },
-  { title: '36개월', align: 'center', width: '12%', key: '36month' },
 ];
 
-const deposits = ref([]);
+const deposits: Ref<{ [x: string]: any }[]> = ref([]);
+
 const depositLength = computed(() => {
   return deposits.value.length;
 });
@@ -72,13 +112,15 @@ const intrRate = ref([null, null, null, null]);
 const intrRate2 = ref([null, null, null, null]);
 
 const isContractDeposit = computed(() => {
-  return userStore.userInfo?.contract_deposit.some((e) => e['deposit_code'] === selectedDepositCode.value);
+  return userStore.userInfo?.contract_deposit.some(
+    (e: { [x: string]: any }) => e['deposit_code'] === selectedDepositCode.value,
+  );
 });
 
 const userStore = useUserStore();
 const router = useRouter();
 
-const makeItems = function (item) {
+const makeItems = function (item: { [x: string]: any }) {
   const result = {
     deposit_code: item['deposit_code'],
     dcls_month: item['dcls_month'],
@@ -99,8 +141,6 @@ const makeItems = function (item) {
       result['12month'] = option['intr_rate'];
     } else if (saveTrm === '24') {
       result['24month'] = option['intr_rate'];
-    } else if (saveTrm === '36') {
-      result['36month'] = option['intr_rate'];
     }
   }
 
@@ -113,6 +153,33 @@ const getAllDeposit = function () {
     .then((res) => {
       const results = res.data;
       for (const item of results) {
+        const makeItems = function (item: { [x: string]: any }): { [x: string]: any } {
+          const result: { [x: string]: any } = {
+            deposit_code: item['deposit_code'],
+            dcls_month: item['dcls_month'],
+            kor_co_nm: item['kor_co_nm'],
+            name: item['name'],
+            '6month': null,
+            '12month': null,
+            '24month': null,
+            '35month': null,
+          };
+
+          for (const option of item['depositoption_set']) {
+            const saveTrm = option['save_trm'];
+
+            if (saveTrm === '6') {
+              result['6month'] = option['intr_rate'];
+            } else if (saveTrm === '12') {
+              result['12month'] = option['intr_rate'];
+            } else if (saveTrm === '24') {
+              result['24month'] = option['intr_rate'];
+            }
+          }
+
+          return result;
+        };
+
         deposits.value.push(makeItems(item));
         if (!banks.value.includes(item['kor_co_nm'])) {
           banks.value.push(item['kor_co_nm']);
@@ -151,7 +218,7 @@ const close = function () {
   dialog.value = false;
 };
 
-const clickRow = function (data) {
+const clickRow = function (data: any) {
   selectedDepositSimple.value = data;
   intrRate.value = [];
   intrRate2.value = [];
@@ -189,9 +256,6 @@ const getDeposit = function () {
         } else if (option.save_trm === '24') {
           intrRate.value[2] = option.intr_rate;
           intrRate2.value[2] = option.intr_rate2;
-        } else if (option.save_trm === '36') {
-          intrRate.value[3] = option.intr_rate;
-          intrRate2.value[3] = option.intr_rate2;
         }
       }
     })
@@ -207,7 +271,7 @@ const addDepositUser = function () {
       userStore.getUserInfo(userStore.userInfo.username);
       const answer = window.confirm('저장이 완료되었습니다.\n가입 상품 관리 페이지로 가시겠습니까?');
       if (answer) {
-        router.push({ name: 'productManage', params: { username: userStore.userInfo.username } });
+        router.push({ name: 'profile' });
       }
     })
     .catch((err) => {
