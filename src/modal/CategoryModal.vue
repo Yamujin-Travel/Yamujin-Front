@@ -13,23 +13,17 @@
             <icon name="recommend" />
             <span class="text-xs">금융 상품 추천받기</span>
           </button>
-          <button
-            class="flex items-center w-full h-10 gap-2 pl-10 font-medium hover:bg-background-200 hover:font-bold"
-            @click="routeTo('compare')"
-          >
+          <button class="flex items-center w-full h-10 gap-2 pl-10 hover:bg-background-200" @click="routeTo('compare')">
             <icon name="compare" />
             <span class="text-xs">예적금 금리 비교하기</span>
           </button>
           <button
-            class="flex items-center w-full h-10 gap-2 pl-10 font-medium hover:bg-background-200 hover:font-bold"
+            class="flex items-center w-full h-10 gap-2 pl-10 hover:bg-background-200"
             @click="routeTo('exchange')"
           >
             <icon name="exchange" />
-            <span class="text-xs">환율 계산하기</span></button
-          ><button
-            class="flex items-center w-full h-10 gap-2 pl-10 font-medium hover:bg-background-200 hover:font-bold"
-            @click="routeTo('search')"
-          >
+            <span class="text-xs font-bold">환율 계산하기</span></button
+          ><button class="flex items-center w-full h-10 gap-2 pl-10 hover:bg-background-200" @click="routeTo('search')">
             <icon name="search" />
             <span class="text-xs">주변 은행 찾아보기 </span>
           </button>
