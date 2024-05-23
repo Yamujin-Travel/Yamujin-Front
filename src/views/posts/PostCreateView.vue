@@ -2,8 +2,6 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import GoToBack from '@/components/GoToBack.vue';
-import PostForm from '@/components/PostForm.vue';
-import { useUserStore } from '@/store/modules/users';
 import { getAuthInstance } from '@/api/axios';
 import { useVuelidate } from '@vuelidate/core';
 import { required, maxLength, helpers } from '@vuelidate/validators';
@@ -32,7 +30,6 @@ const rules = {
 const v$ = useVuelidate(rules, state);
 
 const router = useRouter();
-const userStore = useUserStore();
 
 const createPost = function () {
   authInstance

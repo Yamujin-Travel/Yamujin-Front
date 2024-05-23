@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, createCommentVNode } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/users';
 import GoToBack from '@/components/GoToBack.vue';
@@ -14,11 +14,8 @@ const pageNum = route.query.page;
 const post = ref();
 const comments = ref();
 
-const dialog = ref(false);
 const isPostedUser = ref(false);
 const commentContent = ref('');
-const updatedCommentId = ref();
-const updatedCommentContent = ref('');
 
 const userStore = useUserStore();
 
@@ -57,7 +54,7 @@ const deletePost = function () {
   if (answer) {
     authInstance
       .delete(`/board/${postId}/`)
-      .then((res) => {
+      .then(() => {
         router.push({ name: 'PostList', query: { page: pageNum } });
       })
       .catch((err) => {
@@ -77,46 +74,6 @@ const createComment = function () {
       setTimeout(() => {
         window.scrollTo({ left: 0, top: document.body.scrollHeight + 100, behavior: 'smooth' });
       }, 200);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-const deleteComment = function (commentId: any) {
-  const answer = window.confirm('정말 삭제하시겠습니까?');
-
-  if (answer) {
-    authInstance
-      .delete(`/board/${postId}/comments/${commentId}/`)
-      .then((res) => {
-        comments.value = comments.value.filter((comment: any) => comment.id != commentId);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-};
-
-const close = function () {
-  dialog.value = false;
-};
-
-const editComment = function (commentId: any, value: any) {
-  updatedCommentId.value = commentId;
-  updatedCommentContent.value = value;
-
-  dialog.value = true;
-};
-
-const save = function () {
-  authInstance
-    .put(`/board/${postId}/comments/${updatedCommentId.value}/`, {
-      content: updatedCommentContent.value,
-    })
-    .then((res) => {
-      getComments();
-      dialog.value = false;
     })
     .catch((err) => {
       console.log(err);

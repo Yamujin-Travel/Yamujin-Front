@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { instance } from '@/api/axios';
 
 interface User {
-  name: string;
+  nickname: string;
 }
 
 interface Post {
