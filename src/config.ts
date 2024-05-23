@@ -1,4 +1,4 @@
-export const BASE_API_URL: string = import.meta.env.VITE_APP_BASE_API_URL;
+export const BASE_API_URL = 'http://127.0.0.1:8000';
 
 export const API = {
   ACCOUNTS: `/accounts`,
